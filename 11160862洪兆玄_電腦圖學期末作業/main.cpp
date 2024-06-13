@@ -215,15 +215,15 @@ void mouse (int button, int state, int x, int y)
 }
 float oldAngle[30]={},newAngle[30]= {};
 void timer(int t){
-    glutTimerFunc(50,timer,t+1);
-    if(t%30==0){
+    glutTimerFunc(25,timer,t+1);
+    if(t%20==0){
         if(fin==NULL)fin =fopen("angle.txt","r");
         for(int i=0;i<30;i++){
             oldAngle[i] = newAngle[i];
             fscanf(fin,"%f", & newAngle[i] );
         }
     }
-    float alpha = (t%30)/30.0;
+    float alpha = (t%20)/20.0;
     for(int i=0;i<30;i++){
         angle[i]=newAngle[i]*alpha+oldAngle[i]*(1-alpha);
     }
