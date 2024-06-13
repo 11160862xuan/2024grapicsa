@@ -1,6 +1,8 @@
 #include <opencv/highgui.h> ///使用 OpenCV 2.1 比較簡單, 只要用 High GUI 即可
 #include <opencv/cv.h>
 #include <GL/glut.h>
+#include <windows.h>
+int id1;
 int myTexture(char * filename)
 {
     IplImage * img = cvLoadImage(filename); ///OpenCV讀圖
@@ -234,6 +236,7 @@ void keyboard(unsigned char key, int x, int y)
 {
     if(key=='p'){
         glutTimerFunc(0,timer,0);
+        PlaySound("data/music.wav",NULL,SND_ASYNC);
     }
     if(key=='r'){
         if(fin==NULL)fin = fopen("angle.txt","r");
@@ -279,8 +282,21 @@ void keyboard(unsigned char key, int x, int y)
 
 void display()
 {
-    glClearColor(1,1,0,0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, id1);
+    glDisable(GL_LIGHTING);
+    glPushMatrix();
+        glTranslatef(0,0,0.9);
+        glBegin(GL_POLYGON);
+            glTexCoord2f(0,0); glVertex2f(-1,+1);
+            glTexCoord2f(0,1); glVertex2f(-1,-1);
+            glTexCoord2f(1,1); glVertex2f(+1,-1);
+            glTexCoord2f(1,0); glVertex2f(+1,+1);
+        glEnd();
+    glPopMatrix();
+    glEnable(GL_LIGHTING);
+
 
     glPushMatrix();
         glRotatef(angle[0],0,1,0);
@@ -388,8 +404,10 @@ int main(int argc, char*argv[])
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_DEPTH);
+    glutInitWindowSize(600,600);
     glutCreateWindow("week13-1 Gundam");
     glutDisplayFunc(display);
+    id1 = myTexture("data/background.jpg");
     glutIdleFunc(display); ///加這行, 讓它轉動
     glutMotionFunc(motion);
     glutMouseFunc(mouse);
